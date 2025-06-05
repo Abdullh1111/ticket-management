@@ -12,17 +12,17 @@ export const metadata: Metadata = {
 const items = [
   {
     title: "Ticket lists",
-    url: "/tickets",
+    url: "/dashboard/tickets",
     icon: Home,
   },
   {
     title: "Add Ticket",
-    url: "#",
+    url: "/dashboard/addTicket",
     icon: Calendar,
   },
   {
     title: "Inbox",
-    url: "#",
+    url: "chat",
     icon: Inbox,
   },
 ];
