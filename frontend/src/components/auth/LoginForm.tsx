@@ -44,7 +44,7 @@ export function LoginForm() {
     if (error) {
       alert('Login failed!')
     }
-  }, [error,data,isLoading])
+  }, [error,data,isLoading, router]);
 
   return (
     <Form {...form}>

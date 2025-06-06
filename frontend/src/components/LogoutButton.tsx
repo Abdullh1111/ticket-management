@@ -1,7 +1,7 @@
 'use client'
 import { useLogoutMutation } from '@/redux/services/auth.service';
 import { useRouter } from 'next/navigation';
-import React, { use, useEffect } from 'react'
+import React, { useEffect } from 'react'
 
 export default function LogoutButton() {
     const router = useRouter();
