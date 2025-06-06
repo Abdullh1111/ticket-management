@@ -22,14 +22,14 @@ const items = [
   },
   {
     title: "Inbox",
-    url: "chat",
+    url: "/dashboard/chat",
     icon: Inbox,
   },
 ];
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <SidebarProvider>
-      <div className="flex min-h-screen">
+      <div className="flex min-h-screen w-screen overflow-auto">
         <AppSidebar items={items} />
         <div className="flex-1 relative">
           <SidebarTrigger className="block lg:hidden p-2" />

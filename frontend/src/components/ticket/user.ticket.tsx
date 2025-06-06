@@ -2,6 +2,7 @@
 
 import { TTicket } from "@/types/Ticket.interface";
 import { useState } from "react";
+import { Button } from "../ui/button";
 
 type Props = {
   ticket: TTicket;
@@ -58,12 +59,9 @@ const TicketShow: React.FC<Props> = ({ ticket }) => {
           className="w-full border border-gray-300 rounded-md p-2 mb-2"
           rows={3}
         />
-        <button
-          type="submit"
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-        >
-          Submit Comment
-        </button>
+      <Button type="submit" className="w-full">
+        Submit comments
+      </Button>
       </form>
     </div>
   );

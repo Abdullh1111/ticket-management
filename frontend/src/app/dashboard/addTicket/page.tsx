@@ -59,7 +59,9 @@ const CreateTicketForm: React.FC = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="w-screen mx-auto space-y-6 bg-white p-6 rounded-xl shadow">
+      <div>
+        <h2 className='text-2xl font-bold my-10'>Add A New Ticket</h2>
+        <form onSubmit={handleSubmit} className="w-[70vw] md:w-[50vw] lg:w-[70vw]  mx-auto space-y-6 bg-white p-6 rounded-xl shadow">
       <div>
         <Label htmlFor="subject">Subject</Label>
         <Input id="subject" name="subject" value={formData.subject} onChange={handleChange} />
@@ -115,6 +117,7 @@ const CreateTicketForm: React.FC = () => {
         Submit Ticket
       </Button>
     </form>
+      </div>
   );
 };
 
