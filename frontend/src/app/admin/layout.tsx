@@ -1,7 +1,7 @@
 import { AppSidebar } from "@/components/sidebar/dashboardSidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Metadata } from "next";
-import { Calendar, Home, Inbox } from "lucide-react";
+import { Home, Inbox } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Ticket management dashboard",

@@ -1,4 +1,4 @@
-type TMessage = {
+export type TMessage = {
   id: number;
   sender: 'user' | 'admin';
   content: string;

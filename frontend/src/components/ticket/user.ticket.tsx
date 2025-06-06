@@ -23,7 +23,7 @@ const TicketShow: React.FC<Props> = ({ ticket }) => {
   // console.log(isAdmin,pathname)
   const [newComment, setNewComment] = useState('');
   const [status, setStatus] = useState<TTicket['status']>(ticket.status);
-  const [priority, setPriority] = useState<TTicket['priority']>(ticket.priority);
+  // const [, setPriority] = useState<TTicket['priority']>(ticket.priority);
   const [comments, setComments] = useState(ticket.comments);
 
   const handleCommentSubmit = (e: React.FormEvent) => {
@@ -45,9 +45,9 @@ const TicketShow: React.FC<Props> = ({ ticket }) => {
     setStatus(value);
   };
 
-  const handlePriorityChange = (value: TTicket['priority']) => {
-    setPriority(value);
-  };
+  // const handlePriorityChange = (value: TTicket['priority']) => {
+  //   setPriority(value);
+  // };
 
   return (
     <div className="max-w-3xl mx-auto bg-white shadow-md rounded-lg p-6 my-10">

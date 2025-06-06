@@ -6,6 +6,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { useRegisterMutation } from '@/redux/services/auth.service'
+import { useEffect } from 'react'
 
 const formSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -18,6 +20,7 @@ const formSchema = z.object({
 })
 
 export function RegisterForm() {
+  const [register, {data, isLoading, error}] = useRegisterMutation()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -29,9 +32,22 @@ export function RegisterForm() {
   })
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log('Register data:', values)
-    // Add API call here
+    const data = {
+      fullName: values.name,
+      email: values.email,
+      password: values.password
+    }
+    register(data)
   }
+
+  useEffect(() => {
+    if (data) {
+      alert('Registration successful!')
+    }
+    if (error) {
+      alert('Registration failed!')
+    }
+  }, [error,data,isLoading])
 
   return (
     <Form {...form}>
