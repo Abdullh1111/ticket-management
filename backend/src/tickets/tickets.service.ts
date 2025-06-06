@@ -2,12 +2,17 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateCommentDto, CreateTicketDto } from './dto/create-ticket.dto';
 import { UpdateTicketDto } from './dto/update-ticket.dto';
 import { PrismaService } from 'src/libs/prisma/prisma.service';
+import { CloudinaryService } from 'src/libs/cloudinary/src';
 
 @Injectable()
 export class TicketsService {
-  constructor(private readonly prisma: PrismaService) {}
-  async create(createTicketDto: CreateTicketDto, userId: string) {
+  constructor(private readonly prisma: PrismaService, private cloudinary: CloudinaryService) {}
+  async create(createTicketDto: CreateTicketDto, userId: string, attachment?: Express.Multer.File) {
     try {
+      if (attachment) {
+        const result = await this.cloudinary.uploadFile(attachment);
+        createTicketDto.attachmentUrl = result.secure_url;
+      }
       const { comments, ...rest } = createTicketDto;
 
       return await this.prisma.ticket.create({

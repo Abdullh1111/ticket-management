@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useCreateTicketMutation } from '@/redux/services/ticket.service';
 
 type TicketFormData = {
   subject: string;
@@ -25,6 +26,7 @@ const CreateTicketForm: React.FC = () => {
     attachment: null,
   });
 
+  const [createTicket, { isLoading, data, error }] = useCreateTicketMutation();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -55,8 +57,18 @@ const CreateTicketForm: React.FC = () => {
     if (formData.attachment) {
       payload.append('attachment', formData.attachment);
     }
-    console.log(formData);
+
+    createTicket(payload);
   };
+
+  useEffect(() => {
+    if (data) {
+      alert('Ticket created successfully!');
+    }
+    if (error) {
+      alert('Ticket creation failed!');
+    }
+  }, [data, error, isLoading]);
 
   return (
       <div>
@@ -113,8 +125,8 @@ const CreateTicketForm: React.FC = () => {
         <Input type="file" id="attachment" onChange={handleFileChange} />
       </div>
 
-      <Button type="submit" className="w-full">
-        Submit Ticket
+      <Button disabled={isLoading} type="submit" className="w-full">
+        {isLoading ? 'Creating...' : 'Create Ticket'}
       </Button>
     </form>
       </div>

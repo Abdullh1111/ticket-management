@@ -8,6 +8,8 @@ import {
   Delete,
   UseGuards,
   Req,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { TicketsService } from './tickets.service';
 import { CreateCommentDto, CreateTicketDto } from './dto/create-ticket.dto';
@@ -15,6 +17,7 @@ import { UpdateTicketDto } from './dto/update-ticket.dto';
 import { JwtAuthGuard } from 'src/guards/jwt-auth-guard';
 import { Roles } from 'src/auth/src/roles.decorator';
 import { Role } from '@prisma/client';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('tickets')
 export class TicketsController {
@@ -22,9 +25,11 @@ export class TicketsController {
 
   @Post()
   @UseGuards(JwtAuthGuard)
-  create(@Body() createTicketDto: CreateTicketDto, @Req() req) {
+  @UseInterceptors(FileInterceptor('attachment'))
+  create(@UploadedFile() attachment: Express.Multer.File, @Body() createTicketDto: any, @Req() req) {
+    console.log(createTicketDto)
     const ownerid = req.user.id;
-    return this.ticketsService.create(createTicketDto, ownerid);
+    return this.ticketsService.create(createTicketDto, ownerid, attachment);
   }
 
   @Get()
