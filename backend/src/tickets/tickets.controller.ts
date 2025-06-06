@@ -58,7 +58,9 @@ export class TicketsController {
   CreateComments(
     @Param('id') id: string,
     @Body() commentDto: CreateCommentDto,
+    @Req() req
   ) {
-    return this.ticketsService.CreateComments(id, commentDto);
+    const role = req.user.role;
+    return this.ticketsService.CreateComments(id, commentDto,role);
   }
 }

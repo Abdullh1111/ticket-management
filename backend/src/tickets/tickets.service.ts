@@ -92,11 +92,11 @@ export class TicketsService {
     }
   }
 
-  async CreateComments(id: string, commentDto: CreateCommentDto) {
+  async CreateComments(id: string, commentDto: CreateCommentDto, role: string) {
     try {
       return await this.prisma.comment.create({
         data: {
-          author: commentDto.author,
+          author: role,
           content: commentDto.content,
           ticket: {
             connect: { id },

@@ -1,7 +1,7 @@
 'use client';
 
 import { TTicket } from '@/types/Ticket.interface';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '../ui/button';
 import {
   Select,
@@ -11,6 +11,7 @@ import {
   SelectItem,
 } from '../ui/select';
 import { usePathname } from 'next/navigation';
+import { useSentCommentsMutation } from '@/redux/services/ticket.service';
 
 type Props = {
   ticket: TTicket;
@@ -18,6 +19,7 @@ type Props = {
 };
 
 const TicketShow: React.FC<Props> = ({ ticket }) => {
+  const [sentComments, commentRes] = useSentCommentsMutation();
   const pathname = usePathname();
   const isAdmin = pathname?.startsWith('/admin');
   // console.log(isAdmin,pathname)
@@ -34,10 +36,9 @@ const TicketShow: React.FC<Props> = ({ ticket }) => {
       id: Date.now(),
       author: 'Admin',
       content: newComment,
-      created_at: new Date().toISOString(),
     };
 
-    setComments(prev => [...prev, comment]);
+    sentComments({ body: comment, ticketId: ticket.id });
     setNewComment('');
   };
 
@@ -48,6 +49,15 @@ const TicketShow: React.FC<Props> = ({ ticket }) => {
   // const handlePriorityChange = (value: TTicket['priority']) => {
   //   setPriority(value);
   // };
+
+  useEffect(() => {
+    if (commentRes.data) {
+      alert('Comment sent successfully');
+    }
+    if (commentRes.error) {
+      alert('Failed to send comment');
+    }
+  }, [commentRes]);
 
   return (
     <div className="max-w-3xl mx-auto bg-white shadow-md rounded-lg p-6 my-10">
@@ -114,11 +124,11 @@ const TicketShow: React.FC<Props> = ({ ticket }) => {
         ) : (
           <ul className="space-y-4">
             {comments.map((comment) => (
-              <li key={comment.id} className="border rounded-md p-3">
+              <li key={comment?.id} className="border rounded-md p-3">
                 <p className="text-sm text-gray-600">
-                  {comment.author} - {new Date(comment.created_at).toLocaleString()}
+                  {comment?.author} - {new Date(comment?.createdAt).toLocaleString()}
                 </p>
-                <p>{comment.content}</p>
+                <p>{comment?.content}</p>
               </li>
             ))}
           </ul>
@@ -134,8 +144,8 @@ const TicketShow: React.FC<Props> = ({ ticket }) => {
           className="w-full border border-gray-300 rounded-md p-2 mb-2"
           rows={3}
         />
-        <Button type="submit" className="w-full">
-          Submit Comment
+        <Button disabled= {commentRes.isLoading} type="submit" className="w-full">
+          {commentRes.isLoading ? 'Sending...' : 'Send Comment'}
         </Button>
       </form>
     </div>
