@@ -1,6 +1,6 @@
 'use client';
 
-import { TTicket } from '@/types/Ticket.interface';
+import { TComment, TTicket } from '@/types/Ticket.interface';
 import { useEffect, useState } from 'react';
 import { Button } from '../ui/button';
 import {
@@ -26,19 +26,21 @@ const TicketShow: React.FC<Props> = ({ ticket }) => {
   const [newComment, setNewComment] = useState('');
   const [status, setStatus] = useState<TTicket['status']>(ticket.status);
   // const [, setPriority] = useState<TTicket['priority']>(ticket.priority);
-  const [comments, setComments] = useState(ticket.comments);
+  const [comments, setComments] = useState<TComment[]>(ticket.comments);
 
   const handleCommentSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newComment.trim()) return;
 
     const comment = {
-      id: Date.now(),
       author: 'Admin',
       content: newComment,
+      createdAt: new Date().toISOString(),
     };
 
     sentComments({ body: comment, ticketId: ticket.id });
+
+    setComments([...comments, comment]);
     setNewComment('');
   };
 

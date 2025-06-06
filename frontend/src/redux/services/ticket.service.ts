@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { TComment } from "@/types/Ticket.interface";
 import { mainUrl } from "@/URL/main.url";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 

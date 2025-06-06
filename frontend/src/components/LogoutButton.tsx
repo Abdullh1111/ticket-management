@@ -19,7 +19,7 @@ export default function LogoutButton() {
     if (error) {
       alert('Logout failed!');
     }
-  }, [data, error, isLoading]);
+  }, [data, error, isLoading, router]);
   return (
       <button disabled={isLoading} onClick={handleLogout} className="text-red-500 hover:underline w-full bg-red-100 py-3 mb-2">
         {isLoading ? 'Logging out...' : 'Logout'}
