@@ -7,43 +7,42 @@ import { PrismaService } from 'src/libs/prisma/prisma.service';
 export class TicketsService {
   constructor(private readonly prisma: PrismaService) {}
   async create(createTicketDto: CreateTicketDto, userId: string) {
-  try {
-    const { comments, ...rest } = createTicketDto;
+    try {
+      const { comments, ...rest } = createTicketDto;
 
-  return await this.prisma.ticket.create({
-    data: {
-      ...rest,
-      owner: {
-        connect: { id: userId },  // ✅ uses Prisma relation
-      },
-      ...(comments?.length && {
-        comments: {
-          create: comments.map((c) => ({
-            author: c.author,
-            content: c.content,
-          })),
+      return await this.prisma.ticket.create({
+        data: {
+          ...rest,
+          owner: {
+            connect: { id: userId }, // ✅ uses Prisma relation
+          },
+          ...(comments?.length && {
+            comments: {
+              create: comments.map((c) => ({
+                author: c.author,
+                content: c.content,
+              })),
+            },
+          }),
         },
-      }),
-    },
-    include: {
-      comments: true,
-    },
-  });
-  } catch (error) {
-     throw new BadRequestException(
+        include: {
+          comments: true,
+        },
+      });
+    } catch (error) {
+      throw new BadRequestException(
         error?.meta?.cause || error?.message || 'Failed to create ticket',
       );
+    }
   }
-}
-
 
   async findAll() {
     try {
       return await this.prisma.ticket.findMany({
-      include: {
-        comments: true,
-      },
-    });
+        include: {
+          comments: true,
+        },
+      });
     } catch (error) {
       throw new BadRequestException(
         error?.meta?.cause || error?.message || 'Failed to fetch tickets',
@@ -54,15 +53,15 @@ export class TicketsService {
   async findUserTickets(ownerid: string) {
     try {
       return await this.prisma.ticket.findMany({
-      where: {
-        owner: {
-          id: ownerid,
+        where: {
+          owner: {
+            id: ownerid,
+          },
         },
-      },
-      include: {
-        comments: true,
-      },
-    });
+        include: {
+          comments: true,
+        },
+      });
     } catch (error) {
       throw new BadRequestException(
         error?.meta?.cause || error?.message || 'Failed to fetch tickets',
@@ -73,14 +72,14 @@ export class TicketsService {
   async update(id: string, updateTicketDto: UpdateTicketDto) {
     try {
       return await this.prisma.ticket.update({
-      where: { id },
-      data: {
-        status: updateTicketDto.status,
-      },
-      include: {
-        comments: true,
-      },
-    });
+        where: { id },
+        data: {
+          status: updateTicketDto.status,
+        },
+        include: {
+          comments: true,
+        },
+      });
     } catch (error) {
       throw new BadRequestException(
         error?.meta?.cause || error?.message || 'Failed to update ticket',
@@ -97,7 +96,6 @@ export class TicketsService {
           ticket: {
             connect: { id },
           },
-
         },
       });
     } catch (error) {

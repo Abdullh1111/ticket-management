@@ -7,16 +7,7 @@ export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery: fetchBaseQuery({
     baseUrl: `${mainUrl}/auth/`,
-    prepareHeaders: (headers) => {
-      // Get token from sessionStorage
-      const token = sessionStorage.getItem("adminToken"); // Replace 'authToken' with your key
-
-      // If token exists, add it to headers
-      if (token) {
-        headers.set("Authorization", `Bearer ${token}`);
-      }
-      return headers;
-    },
+    credentials: "include",
   }),
   endpoints: (build) => ({
     login: build.mutation<any, any>({
@@ -33,6 +24,12 @@ export const authApi = createApi({
         body,
       }),
     }),
+    logout: build.mutation<any, void>({
+      query: () => ({
+        url: "logout",
+        method: "POST",
+      }),
+    })
   }),
 });
 
@@ -41,4 +38,5 @@ export const authApi = createApi({
 export const {
   useLoginMutation,
   useRegisterMutation,
+  useLogoutMutation
 } = authApi;

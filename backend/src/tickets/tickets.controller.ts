@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  Req,
+} from '@nestjs/common';
 import { TicketsService } from './tickets.service';
 import { CreateCommentDto, CreateTicketDto } from './dto/create-ticket.dto';
 import { UpdateTicketDto } from './dto/update-ticket.dto';
@@ -40,7 +50,10 @@ export class TicketsController {
 
   @Post('comments/:id')
   @UseGuards(JwtAuthGuard)
-  CreateComments(@Param('id') id: string, @Body() commentDto: CreateCommentDto) {
+  CreateComments(
+    @Param('id') id: string,
+    @Body() commentDto: CreateCommentDto,
+  ) {
     return this.ticketsService.CreateComments(id, commentDto);
   }
 }

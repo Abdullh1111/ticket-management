@@ -17,7 +17,6 @@ const userStatus = {
 };
 
 const PROTECTED_ROUTES: Record<string, string[]> = {
-  "/" : [userStatus.USER, userStatus.ADMIN],
   "/dashboard": [userStatus.USER, userStatus.ADMIN],
   "/admin": [userStatus.ADMIN],
 };
@@ -42,11 +41,8 @@ export async function middleware(request: NextRequest) {
   );
 
   if (protectedPath) {
-    // const authHeader = request.headers.get('authorization');
-    // console.log("auth header", authHeader);
-    const token = request.cookies.get("token")?.value;
+    const token = request.cookies.get("accessToken")?.value;
 
-    // const token = authHeader?.split(' ')[1];
 
     // Handle missing
     console.log("token", token);
@@ -79,7 +75,7 @@ export async function middleware(request: NextRequest) {
           { message: "Unauthorized access" },
           { status: 403 }
         );
-      }
+      } 
       return NextResponse.redirect(new URL("/unauthorized", request.url));
     }
 
@@ -100,5 +96,5 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   // matcher: ["/dashboard/:path*", "/admin/:path*"],
-  matcher: ["/sdf/:path*"],
+  matcher: ["/dashboard/:path*", "/admin/:path*"],
 };

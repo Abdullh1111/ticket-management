@@ -10,6 +10,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import LogoutButton from "../LogoutButton";
 
 type props = {
   items: {
@@ -41,9 +42,7 @@ export function AppSidebar({ items }: props) {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <button className="text-red-500 hover:underline w-full bg-red-100 py-3 mb-2">
-        Log Out
-      </button>
+      <LogoutButton />
     </Sidebar>
   );
 }

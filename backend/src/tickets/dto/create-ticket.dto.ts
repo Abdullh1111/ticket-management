@@ -9,7 +9,6 @@ import {
 import { Type } from 'class-transformer';
 import { Category, Priority } from '@prisma/client';
 
-
 export class CreateCommentDto {
   @IsString()
   @IsNotEmpty()

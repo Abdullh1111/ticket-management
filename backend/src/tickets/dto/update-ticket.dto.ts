@@ -4,6 +4,6 @@ import { IsEnum, IsString } from 'class-validator';
 import { Status } from '@prisma/client';
 
 export class UpdateTicketDto extends PartialType(CreateTicketDto) {
-    @IsEnum(Status)
-    status: Status
+  @IsEnum(Status)
+  status: Status;
 }

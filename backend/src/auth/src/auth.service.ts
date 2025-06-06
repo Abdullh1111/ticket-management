@@ -57,7 +57,7 @@ export class AuthService {
         data: {
           email,
           password: hashedPassword,
-          verified: false,
+          verified: true,
           verificationToken,
           profile: {
             create: {
@@ -71,7 +71,7 @@ export class AuthService {
       });
 
       // Send verification email
-      await this.sendVerificationEmail(email, verificationToken);
+      // await this.sendVerificationEmail(email, verificationToken);
 
       // Convert to UserEntity
       return {
@@ -94,6 +94,7 @@ export class AuthService {
     const { email, password } = loginDto;
 
     try {
+      // console.log(email, password);
       const user = await this.prisma.user.findUnique({
         where: { email },
       });

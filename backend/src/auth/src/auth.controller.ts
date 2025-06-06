@@ -5,6 +5,7 @@ import {
   UseGuards,
   Request,
   Get,
+  Res,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
@@ -28,8 +29,14 @@ export class AuthController {
   }
 
   @Post('login')
-  async login(@Body() loginDto: LoginDto) {
-    return this.authService.login(loginDto);
+  async login(@Body() loginDto: LoginDto, @Res({passthrough: true}) res) {
+    const data = await this.authService.login(loginDto);
+    res.cookie('accessToken', data.accessToken,{
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+    });
+    return data;
   }
 
   @Post('resend-verification')
@@ -51,5 +58,13 @@ export class AuthController {
   @Post('reset-password')
   async resetPassword(@Body() passwordResetDto: PasswordResetDto) {
     return this.authService.resetPassword(passwordResetDto);
+  }
+
+  @Post('logout')
+  async logout(@Res({passthrough: true}) res) {
+    res.clearCookie('accessToken');
+    return {
+      message: 'Logout successful',
+    };
   }
 }
