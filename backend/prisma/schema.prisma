@@ -71,7 +71,7 @@ model Ticket {
   description  String
   category     Category
   priority     Priority
-  status       Status
+  status       Status      @default(InProgress)
   attachmentUrl String?   // Optional
   comments     Comment[]  // One-to-many relationship
   ownerId      String

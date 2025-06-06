@@ -1,34 +1,46 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
 import { TicketsService } from './tickets.service';
-import { CreateTicketDto } from './dto/create-ticket.dto';
+import { CreateCommentDto, CreateTicketDto } from './dto/create-ticket.dto';
 import { UpdateTicketDto } from './dto/update-ticket.dto';
+import { JwtAuthGuard } from 'src/guards/jwt-auth-guard';
+import { Roles } from 'src/auth/src/roles.decorator';
+import { Role } from '@prisma/client';
 
 @Controller('tickets')
 export class TicketsController {
   constructor(private readonly ticketsService: TicketsService) {}
 
   @Post()
-  create(@Body() createTicketDto: CreateTicketDto) {
-    return this.ticketsService.create(createTicketDto);
+  @UseGuards(JwtAuthGuard)
+  create(@Body() createTicketDto: CreateTicketDto, @Req() req) {
+    const ownerid = req.user.id;
+    return this.ticketsService.create(createTicketDto, ownerid);
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard)
+  @Roles(Role.ADMIN)
   findAll() {
     return this.ticketsService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.ticketsService.findOne(+id);
+  @Get('userTickets')
+  @UseGuards(JwtAuthGuard)
+  findUserTickets(@Req() req) {
+    const ownerid = req.user.id;
+    return this.ticketsService.findUserTickets(ownerid);
   }
 
   @Patch(':id')
+  @UseGuards(JwtAuthGuard)
+  @Roles(Role.ADMIN)
   update(@Param('id') id: string, @Body() updateTicketDto: UpdateTicketDto) {
-    return this.ticketsService.update(+id, updateTicketDto);
+    return this.ticketsService.update(id, updateTicketDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.ticketsService.remove(+id);
+  @Post('comments/:id')
+  @UseGuards(JwtAuthGuard)
+  CreateComments(@Param('id') id: string, @Body() commentDto: CreateCommentDto) {
+    return this.ticketsService.CreateComments(id, commentDto);
   }
 }

@@ -1,26 +1,109 @@
-import { Injectable } from '@nestjs/common';
-import { CreateTicketDto } from './dto/create-ticket.dto';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { CreateCommentDto, CreateTicketDto } from './dto/create-ticket.dto';
 import { UpdateTicketDto } from './dto/update-ticket.dto';
+import { PrismaService } from 'src/libs/prisma/prisma.service';
 
 @Injectable()
 export class TicketsService {
-  create(createTicketDto: CreateTicketDto) {
-    return 'This action adds a new ticket';
+  constructor(private readonly prisma: PrismaService) {}
+  async create(createTicketDto: CreateTicketDto, userId: string) {
+  try {
+    const { comments, ...rest } = createTicketDto;
+
+  return await this.prisma.ticket.create({
+    data: {
+      ...rest,
+      owner: {
+        connect: { id: userId },  // ✅ uses Prisma relation
+      },
+      ...(comments?.length && {
+        comments: {
+          create: comments.map((c) => ({
+            author: c.author,
+            content: c.content,
+          })),
+        },
+      }),
+    },
+    include: {
+      comments: true,
+    },
+  });
+  } catch (error) {
+     throw new BadRequestException(
+        error?.meta?.cause || error?.message || 'Failed to create ticket',
+      );
+  }
+}
+
+
+  async findAll() {
+    try {
+      return await this.prisma.ticket.findMany({
+      include: {
+        comments: true,
+      },
+    });
+    } catch (error) {
+      throw new BadRequestException(
+        error?.meta?.cause || error?.message || 'Failed to fetch tickets',
+      );
+    }
   }
 
-  findAll() {
-    return `This action returns all tickets`;
+  async findUserTickets(ownerid: string) {
+    try {
+      return await this.prisma.ticket.findMany({
+      where: {
+        owner: {
+          id: ownerid,
+        },
+      },
+      include: {
+        comments: true,
+      },
+    });
+    } catch (error) {
+      throw new BadRequestException(
+        error?.meta?.cause || error?.message || 'Failed to fetch tickets',
+      );
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} ticket`;
+  async update(id: string, updateTicketDto: UpdateTicketDto) {
+    try {
+      return await this.prisma.ticket.update({
+      where: { id },
+      data: {
+        status: updateTicketDto.status,
+      },
+      include: {
+        comments: true,
+      },
+    });
+    } catch (error) {
+      throw new BadRequestException(
+        error?.meta?.cause || error?.message || 'Failed to update ticket',
+      );
+    }
   }
 
-  update(id: number, updateTicketDto: UpdateTicketDto) {
-    return `This action updates a #${id} ticket`;
-  }
+  async CreateComments(id: string, commentDto: CreateCommentDto) {
+    try {
+      return await this.prisma.comment.create({
+        data: {
+          author: commentDto.author,
+          content: commentDto.content,
+          ticket: {
+            connect: { id },
+          },
 
-  remove(id: number) {
-    return `This action removes a #${id} ticket`;
+        },
+      });
+    } catch (error) {
+      throw new BadRequestException(
+        error?.meta?.cause || error?.message || 'Failed to fetch comments',
+      );
+    }
   }
 }
