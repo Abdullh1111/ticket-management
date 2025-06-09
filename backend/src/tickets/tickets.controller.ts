@@ -50,6 +50,7 @@ export class TicketsController {
   @UseGuards(JwtAuthGuard)
   @Roles(Role.ADMIN)
   update(@Param('id') id: string, @Body() updateTicketDto: UpdateTicketDto) {
+    console.log(updateTicketDto)
     return this.ticketsService.update(id, updateTicketDto);
   }
 
@@ -62,5 +63,11 @@ export class TicketsController {
   ) {
     const role = req.user.role;
     return this.ticketsService.CreateComments(id, commentDto,role);
+  }
+
+  @Get(':id')
+  @UseGuards(JwtAuthGuard)
+  findOne(@Param('id') id: string) {
+    return this.ticketsService.findOne(id);
   }
 }

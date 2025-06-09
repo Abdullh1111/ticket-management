@@ -10,7 +10,7 @@ export type TTicket = {
   description: string;
   category: 'Technical' | 'Billing' | 'General';
   priority: 'Low' | 'Medium' | 'High';
-  status: 'Open' | 'In Progress' | 'Resolved' | 'Closed';
+  status: 'Open' | 'InProgress' | 'Resolved' | 'Closed';
   attachmentUrl?: string;
   comments: TComment[];
 };

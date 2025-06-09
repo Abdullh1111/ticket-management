@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { useRegisterMutation } from '@/redux/services/auth.service'
 import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 
 const formSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -20,6 +21,7 @@ const formSchema = z.object({
 })
 
 export function RegisterForm() {
+  const router = useRouter()
   const [register, {data, isLoading, error}] = useRegisterMutation()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -43,6 +45,7 @@ export function RegisterForm() {
   useEffect(() => {
     if (data) {
       alert('Registration successful!')
+      router.push('/login')
     }
     if (error) {
       alert('Registration failed!')
@@ -104,7 +107,7 @@ export function RegisterForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full">Register</Button>
+        <Button disabled={isLoading} type="submit" className="w-full">{isLoading ? `Registering...` : 'Register'}</Button>
       </form>
     </Form>
   )

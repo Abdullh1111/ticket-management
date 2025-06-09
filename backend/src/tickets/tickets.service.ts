@@ -109,4 +109,19 @@ export class TicketsService {
       );
     }
   }
+
+  async findOne(id: string) {
+    try {
+      return await this.prisma.ticket.findUnique({
+        where: { id },
+        include: {
+          comments: true,
+        },
+      });
+    } catch (error) {
+      throw new BadRequestException(
+        error?.meta?.cause || error?.message || 'Failed to fetch ticket',
+      );
+    }
+  }
 }

@@ -23,8 +23,15 @@ export const ticketApi = createApi({
         url: "userTickets",
         method: "GET",
       }),
-      providesTags: ["UserTickets"],
     }),
+
+    AdminTickets: build.query<any, void>({
+      query: () => ({
+        url: "",
+        method: "GET",
+      }),
+    }),
+
     SentComments: build.mutation<any, any >({
       query: ({body, ticketId}) => ({
         url: `comments/${ticketId}`,
@@ -32,6 +39,21 @@ export const ticketApi = createApi({
         body,
       }),
       invalidatesTags: ["UserTickets"],
+    }),
+    updateTicket: build.mutation<any, {body: {status: string}, ticketId: string}>({
+      query: ({body, ticketId}) => ({
+        url: `${ticketId}`,
+        method: "PATCH",
+        body,
+      }),
+      invalidatesTags: ["UserTickets"],
+    }),
+    fineOneTicket: build.query<any, string>({
+      query: (id) => ({
+        url: `${id}`,
+        method: "GET",
+      }),
+      providesTags: ["UserTickets"],
     })
   }),
 });
@@ -41,5 +63,8 @@ export const ticketApi = createApi({
 export const {
   useCreateTicketMutation,
   useUserTicketsQuery,
-  useSentCommentsMutation
+  useSentCommentsMutation,
+  useAdminTicketsQuery,
+  useUpdateTicketMutation,
+  useFineOneTicketQuery
 } = ticketApi;
