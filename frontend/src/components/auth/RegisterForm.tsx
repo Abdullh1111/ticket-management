@@ -50,7 +50,7 @@ export function RegisterForm() {
     if (error) {
       alert('Registration failed!')
     }
-  }, [error,data,isLoading])
+  }, [error,data,isLoading, router])
 
   return (
     <Form {...form}>

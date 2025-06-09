@@ -34,7 +34,6 @@ const SingleTicketShow: React.FC = () => {
   const isAdmin = pathname?.startsWith('/admin');
   // console.log(isAdmin,pathname)
   const [newComment, setNewComment] = useState('');
-  const [status, setStatus] = useState<TTicket['status']>(ticket?.status);
   const [comments, setComments] = useState<TComment[]>(ticket?.comments);
 
   const handleCommentSubmit = (e: React.FormEvent) => {
@@ -55,7 +54,6 @@ const SingleTicketShow: React.FC = () => {
 
   const handleStatusChange = (value: TTicket['status']) => {
     console.log(ticket?.id)
-    setStatus(value);
     updateTicket({ body: { status: value }, ticketId: ticket?.id });
   };
 
@@ -81,7 +79,6 @@ const SingleTicketShow: React.FC = () => {
   useEffect(() => {
     if (singleTicket.data) {
       setTicket(singleTicket.data);
-      setStatus(singleTicket.data.status);
       setComments(singleTicket.data.comments);
     }
     if (singleTicket.error) {
