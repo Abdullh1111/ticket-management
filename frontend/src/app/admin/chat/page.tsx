@@ -4,31 +4,45 @@ import { Card } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Input } from '@/components/ui/input';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useAllUserQuery } from '@/redux/services/auth.service';
+import LoadingSpinner from '@/components/Loading';
 
 type User = {
   id: string;
-  name: string;
   email: string;
+  role: "ADMIN" | "USER";
+  profile: {
+    fullName: string;
+  }
 };
-
-const dummyUsers: User[] = [
-  { id: '1', name: 'John Doe', email: 'john@example.com' },
-  { id: '2', name: 'Jane Smith', email: 'jane@example.com' },
-  { id: '3', name: 'Abu Talib', email: 'abu@example.com' },
-];
 
 const AdminChatUserList = () => {
   const [search, setSearch] = useState('');
+  const {data, isLoading, error} = useAllUserQuery();
+  const [dummyUsers, setDummyUsers] = useState<User[]>([]);
+
+  useEffect(() => {
+    if (data) {
+      const users = data.filter((user: User) => user.role !== 'ADMIN');
+      setDummyUsers(users);
+    }
+
+    if (error){
+      alert("Failed to fetch users")
+    }
+  }, [data, isLoading, error]);
 
   const filteredUsers = dummyUsers.filter(
     user =>
-      user.name.toLowerCase().includes(search.toLowerCase()) ||
+      user.profile.fullName.toLowerCase().includes(search.toLowerCase()) ||
       user.email.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
-    <div className="max-w-lg mx-auto mt-10">
+    isLoading ? 
+      <div className='flex justify-center min-h-screen items-center'><LoadingSpinner /> Loading...</div>:
+      <div className="max-w-lg mx-auto mt-10">
       <h2 className="text-2xl font-bold mb-4">Select User to Chat</h2>
       <Input
         placeholder="Search user by name or email"
@@ -44,7 +58,7 @@ const AdminChatUserList = () => {
             filteredUsers.map((user) => (
               <Link key={user.id} href={`/admin/chat/${user.id}`}>
                 <Card className="p-4 cursor-pointer hover:bg-gray-100 transition-all">
-                  <p className="font-semibold">{user.name}</p>
+                  <p className="font-semibold">{user.profile.fullName}</p>
                   <p className="text-sm text-gray-500">{user.email}</p>
                 </Card>
               </Link>

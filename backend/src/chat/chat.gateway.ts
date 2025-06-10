@@ -74,6 +74,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   ) {
     try {
       const { sender, receiverId, content, senderId } = data;
+      console.log("message sent")
 
       if (!sender || !receiverId || !content || !senderId) {
         throw new WsException('Invalid message data');

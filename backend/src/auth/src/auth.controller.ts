@@ -13,6 +13,8 @@ import { LoginDto } from './dto/login.dto';
 import { JwtAuthGuard } from '../../guards/jwt-auth-guard';
 import { VerifyEmailDto } from './dto/verify-email.dto';
 import { PasswordResetDto } from './dto/password-reset.dto';
+import { Roles } from './roles.decorator';
+import { Role } from '@prisma/client';
 
 @Controller('auth')
 export class AuthController {
@@ -58,6 +60,13 @@ export class AuthController {
   @Post('reset-password')
   async resetPassword(@Body() passwordResetDto: PasswordResetDto) {
     return this.authService.resetPassword(passwordResetDto);
+  }
+
+  @Get('allUser')
+  @UseGuards(JwtAuthGuard)
+  @Roles(Role.ADMIN)
+  async getAllUsers() {
+    return this.authService.getAllUsers();
   }
 
   @Post('logout')

@@ -132,6 +132,23 @@ export class AuthService {
     }
   }
 
+  async getAllUsers(): Promise<UserEntity[]> {
+    try {
+      return this.prisma.user.findMany({
+        include: {
+          profile: {
+            select: {
+              fullName: true,
+            }
+          },
+        },
+      });
+    } catch (error) {
+      this.logger.error(`Login error: ${error.message}`);
+      throw error;
+    }
+  }
+
   async verifyEmail(verifyDto: VerifyEmailDto): Promise<VerificationEntity> {
     const { token } = verifyDto;
 

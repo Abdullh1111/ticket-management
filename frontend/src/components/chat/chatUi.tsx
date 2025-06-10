@@ -23,11 +23,11 @@ export default function ChatUi() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const isAdmin = pathname?.startsWith('/admin');
-  let userId : string = "";
+  const [userId, setUserId] = useState<string | null>('');
   chatid = chatid || "cd6dbe01-a363-4cb9-aab6-438a6f3420db";
   useEffect(() => {
     
-   userId = localStorage.getItem('userId') as string;
+   setUserId(localStorage.getItem('userId'));
   }, []);
   // Register user and listen for incoming messages
     useEffect(() => {
@@ -36,7 +36,6 @@ export default function ChatUi() {
     if (socketRef.current) {
       socketRef.current.on('connect', () => {
         console.log('Connected:', socketRef.current?.id);
-        socketRef.current?.emit('registerUser', { userId });
       });
 
       socketRef.current.on('receiveMessage', (msg) => {
@@ -49,6 +48,14 @@ export default function ChatUi() {
     };
   }, []);
 
+  useEffect(() => {
+  if (userId && socketRef.current?.connected) {
+    console.log("Emitting registerUser with", userId);
+    socketRef.current.emit('registerUser', { userId });
+  }
+}, [userId, socketRef.current?.connected]);
+
+
   const sendMessage = () => {
     if (!newMessage.trim()) return;
 
@@ -56,8 +63,9 @@ export default function ChatUi() {
       sender: isAdmin ? 'ADMIN' : 'USER',
       content: newMessage,
       receiverId: chatid,
-      senderId: userId,
+      senderId: userId as string,
     };
+    console.log(newMsg);
 
     socketRef.current?.emit('sendMessage', newMsg);
     setMessages((prev) => [...prev, newMsg]);
