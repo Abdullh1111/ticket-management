@@ -24,7 +24,7 @@ export default function ChatUi() {
   const pathname = usePathname();
   const isAdmin = pathname?.startsWith('/admin');
   const [userId, setUserId] = useState<string | null>('');
-  chatid = chatid || "cd6dbe01-a363-4cb9-aab6-438a6f3420db";
+  chatid = chatid || process.env.NEXT_PUBLIC_ADMIN_ID || '';
   useEffect(() => {
     
    setUserId(localStorage.getItem('userId'));
