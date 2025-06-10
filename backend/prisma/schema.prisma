@@ -55,6 +55,8 @@ model User {
   resetTokenExpiry         DateTime?
   
   tickets                  Ticket[]
+  receivedMsg              Chat[]             @relation("receivedMsg")
+  senderMsg                Chat[]             @relation("sendMsg")
   @@map("users")
 }
 
@@ -89,5 +91,15 @@ model Comment {
   ticketId  String
 }
 
+model Chat {
+  id          String      @id @default(cuid())
+  sender      Role        
+  content     String
+  createdAt   DateTime    @default(now())
+  receiverId  String
+  receiver    User        @relation("receivedMsg" ,fields: [receiverId], references: [id], onDelete: Cascade)
+  senderId    String
+  senderM     User        @relation("sendMsg", fields: [senderId], references: [id], onDelete: Cascade)
+}
 
 

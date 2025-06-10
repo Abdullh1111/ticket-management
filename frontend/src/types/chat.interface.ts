@@ -1,6 +1,8 @@
 export type TMessage = {
-  id: number;
-  sender: 'user' | 'admin';
+  id?: string;
+  sender: 'USER' | 'ADMIN';
   content: string;
-  createdAt: string;
+  createdAt?: string;
+  receiverId?: string;
+  senderId?: string;
 };

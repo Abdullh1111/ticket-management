@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { authApi } from "./services/auth.service";
 import priceReducer from "./price.slice";
 import { ticketApi } from "./services/ticket.service";
+import { chatApi } from "./services/chat.service";
 // ...
 
 export const store = configureStore({
@@ -10,13 +11,15 @@ export const store = configureStore({
     // ...
 
     [authApi.reducerPath]: authApi.reducer,
-    [ticketApi.reducerPath]: ticketApi.reducer
+    [ticketApi.reducerPath]: ticketApi.reducer,
+    [chatApi.reducerPath] : chatApi.reducer
   },
 
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
       authApi.middleware,
-      ticketApi.middleware
+      ticketApi.middleware,
+      chatApi.middleware
     ),
 });
 

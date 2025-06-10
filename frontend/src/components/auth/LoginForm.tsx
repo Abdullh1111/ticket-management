@@ -33,7 +33,9 @@ export function LoginForm() {
 
   useEffect(() => {
     if (data) {
-      localStorage.setItem('accessToken', data.accessToken)
+      console.log(data)
+      localStorage.setItem('userId', data.user.id)
+
       alert('Login successful!')
       if(data.user.role==='ADMIN'){
          router.push('/admin')
