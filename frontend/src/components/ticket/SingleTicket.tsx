@@ -75,6 +75,7 @@ const SingleTicketShow: React.FC = () => {
       alert('Failed to update ticket');
     }
   }, [updateTicketRes]);
+  console.log(ticket)
 
   useEffect(() => {
     if (singleTicket.data) {
