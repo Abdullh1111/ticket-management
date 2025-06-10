@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import { useEffect, useState } from 'react'
+import {useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 const formSchema = z.object({
@@ -17,7 +17,6 @@ const formSchema = z.object({
 export function LoginForm() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -29,7 +28,6 @@ export function LoginForm() {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true)
-    setError(null)
     try {
       const res = await fetch('/api/auth/login', {
         method: 'POST',
@@ -50,9 +48,9 @@ export function LoginForm() {
       } else {
         router.push('/dashboard')
       }
-    } catch (err: any) {
-      setError(err.message)
-      alert(err.message)
+    } catch (err) {
+      alert('Login failed!')
+      console.error(err)
     } finally {
       setIsLoading(false)
     }
