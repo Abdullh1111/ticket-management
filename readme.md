@@ -9,6 +9,7 @@ A full-featured **Ticket Management System** that allows users to submit support
 * 💻 **Real-Time Chat** – Seamless live chat between users and admins for faster communication.
 
 🔗 **Live Demo**: [https://ticket-management-five.vercel.app](https://ticket-management-five.vercel.app)
+Backend is hosting in render free plan. So backend takes 5-10 minutes to start. but after start it run smothly
 
 🧑‍💼 Admin Access (For Demo)
 Use the following credentials to explore the Admin Panel:
