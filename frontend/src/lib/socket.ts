@@ -5,7 +5,7 @@ let socket: Socket | null = null;
 
 export const getSocket = () => {
   if (!socket) {
-    socket = io('http://localhost:5000'); // your backend URL
+    socket = io(process.env.NEXT_PUBLIC_BACKEND_URL); // your backend URL
   }
   return socket;
 };
