@@ -8,6 +8,13 @@ export const ticketApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: `${mainUrl}/tickets/`,
     credentials: "include",
+    prepareHeaders(headers, api) {
+      const token = localStorage.getItem("accessToken");
+      if (token) {
+        headers.set("Authorization", `Bearer ${token}`);
+      }
+      return headers;
+    },
   }),
   tagTypes: ["UserTickets"],
   endpoints: (build) => ({

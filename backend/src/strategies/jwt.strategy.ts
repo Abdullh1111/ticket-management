@@ -7,11 +7,7 @@ import { PrismaService } from 'src/libs/prisma/prisma.service';
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   constructor(private prisma: PrismaService) {
     super({
-      jwtFromRequest: ExtractJwt.fromExtractors([
-  (req) => {
-    return req?.cookies?.accessToken
-  },
-]),
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
       secretOrKey: process.env.JWT_SECRET || 'TicketManagement',
     });

@@ -6,7 +6,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import {useState } from 'react'
+import { useLoginMutation } from '@/redux/services/auth.service'
+import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
 const formSchema = z.object({
@@ -15,9 +16,8 @@ const formSchema = z.object({
 })
 
 export function LoginForm() {
+  const [login, {data, isLoading, error}] = useLoginMutation()
   const router = useRouter()
-  const [isLoading, setIsLoading] = useState(false)
-
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -26,35 +26,31 @@ export function LoginForm() {
     },
   })
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    setIsLoading(true)
-    try {
-      const res = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include', // important for cookies
-        body: JSON.stringify(values),
-      })
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
+    // console.log('Login data:', values)
+    login(values)
+  }
 
-      const data = await res.json()
-
-      if (!res.ok) throw new Error(data.message || 'Login failed')
-
+  useEffect(() => {
+    if (data) {
+      console.log(data)
+      localStorage.setItem('accessToken', data.accessToken)
       localStorage.setItem('userId', data.user.id)
-      alert('Login successful!')
 
-      if (data.user.role === 'ADMIN') {
-        router.push('/admin')
+
+    document.cookie = `accessToken=${data.accessToken}; path=/; max-age=3600`;
+
+      alert('Login successful!')
+      if(data.user.role==='ADMIN'){
+         router.push('/admin')
       } else {
         router.push('/dashboard')
       }
-    } catch (err) {
-      alert('Login failed!')
-      console.error(err)
-    } finally {
-      setIsLoading(false)
     }
-  }
+    if (error) {
+      alert('Login failed!')
+    }
+  }, [error,data,isLoading, router]);
 
   return (
     <Form {...form}>
@@ -85,9 +81,7 @@ export function LoginForm() {
             </FormItem>
           )}
         />
-        <Button disabled={isLoading} type="submit" className="w-full">
-          {isLoading ? 'Loading...' : 'Login'}
-        </Button>
+        <Button disabled={isLoading} type="submit" className="w-full">{isLoading ? 'Loading...' : 'Login'}</Button>
       </form>
     </Form>
   )

@@ -8,8 +8,23 @@ export const authApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: `${mainUrl}/auth/`,
     credentials: "include",
+    prepareHeaders(headers, api) {
+      const token = localStorage.getItem("accessToken");
+      if (token) {
+        headers.set("Authorization", `Bearer ${token}`);
+      }
+      return headers;
+    },
   }),
+  
   endpoints: (build) => ({
+    login: build.mutation<any, any>({
+      query: (body) => ({
+        url: "login",
+        method: "POST",
+        body,
+      }),
+    }),
     register: build.mutation<any, any>({
       query: (body) => ({
         url: "register",
@@ -35,6 +50,7 @@ export const authApi = createApi({
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
 export const {
+  useLoginMutation,
   useRegisterMutation,
   useLogoutMutation,
   useAllUserQuery

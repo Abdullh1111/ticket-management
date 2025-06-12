@@ -8,6 +8,13 @@ export const chatApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: `${mainUrl}/chats/`,
     credentials: "include",
+    prepareHeaders(headers) {
+      const token = localStorage.getItem("accessToken");
+      if (token) {
+        headers.set("Authorization", `Bearer ${token}`);
+      }
+      return headers;
+    },
   }),
   tagTypes: ["UserTickets"],
   endpoints: (build) => ({
