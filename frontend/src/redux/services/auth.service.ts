@@ -8,7 +8,8 @@ export const authApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: `${mainUrl}/auth/`,
     credentials: "include",
-    prepareHeaders(headers, api) {
+
+    prepareHeaders(headers) {
       const token = localStorage.getItem("accessToken");
       if (token) {
         headers.set("Authorization", `Bearer ${token}`);
